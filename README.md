@@ -1,6 +1,6 @@
 <img align="left" height="160" src=img/logotrans.png>
 
-Le contenu de ce dépôt correspond à un rendu de TP dans le cadre de l'option IA enseignée à l'Enseirb-Matmeca. Cela vaut pour le module de Représentation des connaissances. Le TP choisi porte sur l'IA dans les jeux de plateau et présente différentes méthodes permettant de jouer au jeu Réversi (notamment le Monte Carlo Tree Search).   
+Le contenu de ce dépôt correspond à un rendu de TP dans le cadre de l'option IA enseignée à l'Enseirb-Matmeca. Cela vaut pour le module de Représentation des connaissances. Le TP choisi présente différentes méthodes permettant de jouer au jeu Réversi et notamment le Monte Carlo Tree Search.   
 
 Auteur : Jean-Marie Saindon      
 Encadrant : Laurent Simon  
