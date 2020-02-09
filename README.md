@@ -40,14 +40,11 @@ Monte Carlo a été testé de différentes manières, contre lui-même dans [loc
 Globalement, le résultat obtenu en testant tous mes joueurs contre un randomPlayer sur 100 confrontations en faisant varier le temps de recherche par coups (horizon) donne :
 
 <p align="center">
-  <img width="650" src=img/graphmontecarlo.PNG>
+  <img src=img/graphmontecarlo.png>
 </p>
 
 Monte Carlo parvient au cours du temps à tirer son épingle du jeu en obtenant un score parfait contre le randomPlayer à partir de l'horizon d'une seconde mais reste inférieur à la combinaison iterative deepening - alpha beta - heuristique ultimate.
 
-
-
-
-
-
-
+<p align="center">
+  <img width="650" src=img/res.PNG>
+</p>
