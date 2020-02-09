@@ -51,7 +51,7 @@ class myPlayer(PlayerInterface):
 
     def __init__(self):
         """Init the player with an internal board, an horizon level and a color"""
-        self._horizon = 1 # <= réglage de la profondeur d'exploration souhaitée ou du temps de recherche en secondes
+        self._horizon = 0.1 # <= réglage de la profondeur d'exploration souhaitée ou du temps de recherche en secondes
         self._internalBoard = None
         self._myColor = None
         self._opponentColor = None
@@ -503,7 +503,7 @@ class myPlayer(PlayerInterface):
             mct.treeWalk(mct._tree)
 
         nodeList = mct._tree._childs
-        bestMove = self._board.legal_moves()[0]
+        bestMove = self._internalBoard.legal_moves()[0]
         bestScore = 0
         for n in nodeList:
             if n._visited > bestScore:

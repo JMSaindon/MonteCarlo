@@ -19,16 +19,14 @@ player2 = rd.randomPlayer()
 playersToTest = []
 
 # playersToTest.append(iap.myPlayer())
-# playersToTest.append(imp.myPlayer())
-# playersToTest.append(iau.myPlayer())
+playersToTest.append(imp.myPlayer())
+playersToTest.append(iau.myPlayer())
 # playersToTest.append(imu.myPlayer())
 playersToTest.append(mc.myPlayer())
 
 results = [[] for k in range(len(playersToTest))]
 
-
-# times = [0.00001, 0.01, 0.1, 1]
-times = [0.00001 * 10**k for k in range(6)]
+times = [0.00001 * 10**k for k in range(4)]
 
 print(times)
 
@@ -46,7 +44,7 @@ for p in range(len(playersToTest)):
         print("Black: ", player1.getPlayerName(), ", horizon: ", times[t])
         print("White: ", player2.getPlayerName())
 
-        for i in range(100):
+        for i in range(10):
             nbGames += 1
             b = ColorfulReversi.Board(10)
 
@@ -101,8 +99,10 @@ for p in range(len(playersToTest)):
         results[p].append((nbWin / nbGames) * 100)
 
 
-plt.plot([57.0, 64.0, 71.0, 81.0, 87.0, 95.0], label="iterativeMinimaxParity")
-plt.plot([49.0, 53.0, 54.0, 80.0, 99.0, 100.0], label="iterativeAlphaUlti")
+# valeur relevées pour le graphique présent dans le readme (sur 100 duels)
+# plt.plot(times, [57.0, 64.0, 71.0, 81.0, 87.0, 95.0], label="iterativeMinimaxParity")
+# plt.plot(times, [49.0, 53.0, 54.0, 80.0, 99.0, 100.0], label="iterativeAlphaUlti")
+# plt.plot(times, [46.0, 55.0, 62.0, 68.0, 79.0, 100.0], label="monteCarlo")
 
 for p in range(len(playersToTest)):
     plt.plot(times, results[p], label=playersToTest[p].getPlayerName())
@@ -112,8 +112,8 @@ plt.plot([50 for i in range(len(times))], label="random limit")
 
 plt.xlabel("Horizon (en secondes)")
 plt.xscale('log')
-plt.ylabel("Pourcentage de victoire")
-plt.ylim((0, 100))
+plt.ylabel("Pourcentage de victoires")
+plt.ylim((40, 100))
 plt.title("Pourcentage de victoires de différents joueurs contre un randomPlayer en fonction de l'horizon en secondes")
 plt.legend()
 plt.show()

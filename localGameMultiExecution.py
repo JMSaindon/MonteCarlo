@@ -11,9 +11,8 @@ nbWin = 0
 # Players definition
 player1 = mp.myPlayer()
 
-# Choisir le joueur numero 2 entre le randomPlayer, le myPlayer2 ou encore le myPlayer
+# Choisir le joueur numero 2 entre les specialplayers et myPlayer
 player2 = rd.randomPlayer()
-# player2 = mp2.myPlayer()
 # player2 = mp.myPlayer()
 
 print("Black: ", player1.getPlayerName())
