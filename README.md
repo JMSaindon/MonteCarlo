@@ -43,7 +43,7 @@ Globalement, le résultat obtenu en testant tous mes joueurs contre un randomPla
   <img src=img/graphmontecarlo.png>
 </p>
 
-Monte Carlo parvient au cours du temps à tirer son épingle du jeu en obtenant un score parfait contre le randomPlayer à partir de l'horizon d'une seconde mais reste inférieur à la combinaison iterative deepening - alpha beta - heuristique ultimate.
+Monte Carlo parvient au cours du temps à tirer son épingle du jeu en obtenant un score quasi-parfait contre le randomPlayer à partir de l'horizon d'une seconde mais reste inférieur à la combinaison iterative deepening - alpha beta - heuristique ultimate.
 
 <p align="center">
   <img width="650" src=img/res.PNG>
