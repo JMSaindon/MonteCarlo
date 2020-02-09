@@ -15,11 +15,12 @@ Encadrant : Laurent Simon
 - myPlayer contient le code de Monte Carlo, Iterative deepening, AlphaBeta (NegAlphaBeta), MinMax (NegaMax)
 - myPlayer contient également les heuristiques Parity et Ultimate (Trouvée l'an dernier)
 
-## commandes :
+### commandes
 ```
 $ python localGame.py               #pour Monte Carlo vs Monte Carlo
 $ python localGameMultiExecution.py #pour Monte Carlo vs RandomPlayer plusieurs fois
 ```
+## Implémentation
 
 L'implémentation se base sur le code python fournit pour l'environnement de jeu Reversi. Elle ré-utilise une partie de ce qui avait été développé l'an dernier dans le cadre du projet. Ainsi, en plus du Monte Carlo, on retrouve le MinMax et le AlphaBeta avec leurs heuristiques (Parity et Ultimate). Ultimate est l'heuristique trouvée l'an dernier. J'ai également ajouté les versions NegaMax et NegAlphaBeta ainsi qu'un iterative deepening à mon code pour avoir un opposant de taille à se mesurer à mon Monte Carlo tree search (mon alphabeta associé a l'heuristique ultimate avait été plutôt performant l'an dernier)
 
