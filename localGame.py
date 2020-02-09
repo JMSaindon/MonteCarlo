@@ -1,5 +1,6 @@
 import Reversi
-import myPlayer
+import myPlayer as mp
+import specialplayers.randomPlayer as rd
 import time
 from io import StringIO
 import sys
@@ -7,10 +8,16 @@ import sys
 b = Reversi.Board(10)
 
 players = []
-player1 = myPlayer.myPlayer()
+player1 = mp.myPlayer()
 player1.newGame(b._BLACK)
 players.append(player1)
-player2 = myPlayer.myPlayer()
+
+
+# Choisir le joueur numero 2 entre le randomPlayer, le myPlayer2 ou encore le myPlayer
+player2 = rd.randomPlayer()
+# player2 = mp2.myPlayer()
+# player2 = mp.myPlayer()
+
 player2.newGame(b._WHITE)
 players.append(player2)
 

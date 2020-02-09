@@ -51,14 +51,14 @@ class myPlayer(PlayerInterface):
 
     def __init__(self):
         """Init the player with an internal board, an horizon level and a color"""
-        self._horizon = 5 # <= réglage de la profondeur d'exploration souhaitée ou du temps de recherche en secondes
+        self._horizon = 1 # <= réglage de la profondeur d'exploration souhaitée ou du temps de recherche en secondes
         self._internalBoard = None
         self._myColor = None
         self._opponentColor = None
 
     def getPlayerName(self):
         """Retrieve the player's name"""
-        return "myPlayer"
+        return "iterativeAlphaUlti"
 
     def getPlayerMove(self):
         """Compute and return a move"""
@@ -67,9 +67,10 @@ class myPlayer(PlayerInterface):
             return (-1, -1)
 
         #################################################################################
-        # move = self.firstAlphaBetaMax(self.computeUltimateScoreHeuristic, self._horizon)  # <== Change strategy HERE
-        # move = self.negAlphaBeta(self.computeUltimateScoreHeuristic, float("-inf"), float("inf"), 0, self._horizon, self._myColor)[1]  # <== Change strategy HERE
-        move = self.iterativeDeepening(self.computeUltimateScoreHeuristic, self._horizon)  # <== Change strategy HERE
+        # Change strategy HERE
+
+        move = self.iterativeDeepeningForTesting(self.firstAlphaBetaMax, self.computeUltimateScoreHeuristic, self._horizon)
+
         #################################################################################
 
         self._internalBoard.push(move)
@@ -100,21 +101,12 @@ class myPlayer(PlayerInterface):
 
 
     ########################################################################################
-    ################################   Heuristic Parity   ##################################
-    ########################################################################################
-
-    def computeParityScoreHeuristic(self, color):
-        """Calculate the 'Parity-only' heuristic following the tokens parity in the current board"""
-        (nbW, nbB) = self._internalBoard.get_nb_pieces()
-        score = nbW - nbB if color == 2 else nbB - nbW
-        return score
-
-
-    ########################################################################################
     #################################  Heuristic Ultimate  #################################
     ########################################################################################
 
     def computeUltimateScoreHeuristic(self, color):
+        """Calculates the 'Ultimate' heuristic taking in count the parity, mobility, corner closeness"""
+
         my_color = color
         opp_color = self.flipColor(color)
         my_tiles = 0
@@ -259,55 +251,7 @@ class myPlayer(PlayerInterface):
 
 
     ########################################################################################
-    ################################# Generic MiniMax ######################################
-    ########################################################################################
-
-    def minMax(self, heuristic, l, lmax):
-        """Strategy implementing the MinMax algorithm with a trivial 'Parity-only' heuristic"""
-        worst = float("inf")
-
-        if self._internalBoard.is_game_over() or (l == lmax):
-            return heuristic(self._myColor)
-
-        possible_moves = self._internalBoard.legal_moves()
-        for m in possible_moves:
-            self._internalBoard.push(m)
-            worst = min(worst, self.maxMin(heuristic, l + 1, lmax))
-            self._internalBoard.pop()
-        return worst
-
-    def maxMin(self, heuristic, l, lmax):
-        """Strategy implementing the MaxMin algorithm with a trivial 'Parity-only' heuristic"""
-        best = float("-inf")
-
-        if self._internalBoard.is_game_over() or (l == lmax):
-            return heuristic(self._myColor)
-
-        possible_moves = self._internalBoard.legal_moves()
-        for m in possible_moves:
-            self._internalBoard.push(m)
-            best = max(best, self.minMax(heuristic, l + 1, lmax))
-            self._internalBoard.pop()
-        return best
-
-    def firstMaxMin(self, heuristic, lmax):
-        """Strategy implementing the first call of the MaxMin algorithm with a trivial 'Parity-only' heuristic"""
-        best = float("-inf")
-
-        possible_moves = self._internalBoard.legal_moves()
-        move = possible_moves[0]
-        for m in possible_moves:
-            self._internalBoard.push(m)
-            prevBest = best
-            best = max(best, self.minMax(heuristic, 1, lmax))
-            if best != prevBest:
-                move = m
-            self._internalBoard.pop()
-        return move
-
-
-    ########################################################################################
-    ################################ Generic AlphaBeta #####################################
+    ##################################### AlphaBeta ########################################
     ########################################################################################
 
     def alphaBetaMax(self, heuristic, alpha, beta, l, lmax):
@@ -361,232 +305,23 @@ class myPlayer(PlayerInterface):
 
 
     ########################################################################################
-    ################################# Generic NegaMax ######################################
+    ############################### Iterative Deepening ####################################
     ########################################################################################
 
-    def negaMax(self, heuristic, l, lmax, color):
-        best = float("-inf")
+    def iterativeDeepeningForTesting(self, explorer, heuristic, Texplo):
+        """Strategy implementing the iterative deepening algorithm with our heuristic
+        For the explorer, you have the choice between firstAlphaBetaMax and firstMaxMin
+        This version is only here for tests and plots.
+        Does not respect the time given but returns the move that should have been returned
+        if the time would have been respected"""
 
-        if self._internalBoard.is_game_over() or (l == lmax):
-            return heuristic(color), None
-
-        possible_moves = self._internalBoard.legal_moves()
-        move = possible_moves[0]
-        # print(move)
-        for m in possible_moves:
-            self._internalBoard.push(m)
-            prevBest = best
-            best = max(best, -self.negaMax(heuristic, l + 1, lmax, self.flipColor(color))[0])
-            if best != prevBest:
-                move = m
-            self._internalBoard.pop()
-        return best, move
-
-
-    ########################################################################################
-    ############################## Generic NegAlphaBeta ####################################
-    ########################################################################################
-
-    def negAlphaBeta(self, heuristic, alpha, beta, l, lmax, color):
-        best = float("-inf")
-
-        if self._internalBoard.is_game_over() or (l == lmax):
-            return heuristic(color), None
-
-        possible_moves = self._internalBoard.legal_moves()
-        move = possible_moves[0]
-        for m in possible_moves:
-            self._internalBoard.push(m)
-            prevBest = best
-            best = max(best, -self.negAlphaBeta(heuristic, -beta, -alpha, l + 1, lmax, self.flipColor(color))[0])
-            if best != prevBest:
-                move = m
-                if best > alpha:
-                    alpha = best
-                    if alpha > beta:
-                        self._internalBoard.pop()
-                        return best, move
-
-            self._internalBoard.pop()
-        return best, move
-
-
-    def negAlphaBetaTime(self, heuristic, alpha, beta, l, lmax, color, start, Texplo, tmove):
-        """Strategy implementing the NegAlphaBeta algorithm with our heuristic"""
-        best = float("-inf")
-
-        if self._internalBoard.is_game_over() or (l == lmax) or time.time() - start > Texplo - tmove:
-            return heuristic(color), None
-
-        possible_moves = self._internalBoard.legal_moves()
-        move = possible_moves[0]
-        for m in possible_moves:
-            self._internalBoard.push(m)
-            prevBest = best
-            best = max(best, -self.negAlphaBeta(heuristic, -beta, -alpha, l + 1, lmax, self.flipColor(color))[0], start, Texplo, tmove)
-            if time.time() - start > Texplo - tmove:
-                self._internalBoard.pop()
-                return heuristic(color), None
-            if best != prevBest:
-                move = m
-                if best > alpha:
-                    alpha = best
-                    if alpha > beta:
-                        self._internalBoard.pop()
-                        return best, move
-
-            self._internalBoard.pop()
-        return best, move
-
-    ########################################################################################
-    ############################### Itérative Deepening #####################################
-    ########################################################################################
-
-    def iterativeDeepening(self, heuristic, Texplo):
-        """Strategy implementing the iterative deepening algorithm with our heuristic"""
         start = time.time()
         horizon = 1
         move = self._internalBoard.legal_moves()[0]
-        tmove = 0
-        while (time.time() - start < Texplo - tmove):
-            ti = time.time()
-            newmove = self.negAlphaBetaTime(heuristic, float("-inf"), float("inf"), 0, horizon, self._myColor, start, Texplo, tmove)[1]
-            print("newmove : ", newmove)
-            te = time.time()
-            if newmove != None:
+
+        while (time.time() - start < Texplo):
+            newmove = explorer(heuristic, horizon)
+            if(time.time() - start < Texplo):
                 move = newmove
-            tmove = te - ti
-            print("tmove : ",tmove)
             horizon += 1
         return move
-
-
-    ########################################################################################
-    ############################# Monte Carlo Tree Search ##################################
-    ########################################################################################
-
-    def monteCarlo(self, nTreeWalks):
-        """Strategy implementing the Monte Carlo Tree Search algorithm with our heuristic and a definite number of tree walks"""
-        mct = MonteCarlo(self._internalBoard, self._myColor)
-        for k in range(nTreeWalks):
-            mct.treeWalk(mct._tree)
-
-        nodeList = mct._tree._childs
-        bestMove = nodeList[0]._move
-        bestScore = nodeList[0]._visited
-        for n in nodeList:
-            if n._visited > bestScore:
-                bestScore = n._visited
-                bestMove = n._move
-        return bestMove
-
-    def monteCarloTime(self, timeSearch):
-        """Strategy implementing the Monte Carlo Tree Search algorithm with our heuristic and a definite time search"""
-        mct = MonteCarlo(self._internalBoard, self._myColor)
-        start = time.time()
-        while time.time() - start < timeSearch:
-            mct.treeWalk(mct._tree)
-
-        nodeList = mct._tree._childs
-        bestMove = nodeList[0]._move
-        bestScore = nodeList[0]._visited
-        for n in nodeList:
-            if n._visited > bestScore:
-                bestScore = n._visited
-                bestMove = n._move
-        return bestMove
-
-########################################################################################
-########################### Structures for Monte Carlo #################################
-########################################################################################
-
-class Node:
-    """class node useful for the representation of the tree of moves"""
-
-    def __init__(self, parent, move):
-        self._parent = parent
-        self._move = move
-        self._childs = []
-        self._visited = 0
-        self._successful = 0
-        self._mu = float("inf")
-
-    def championChild(self):
-        champ = self._childs[0]
-        muChamp = self._mu
-        for c in self._childs:
-            if c._mu > muChamp:
-                muChamp = c._mu
-                champ = c
-        return champ
-
-    def update(self, reward):
-        self._visited += 1
-        self._successful += reward
-        self._mu = self._successful / self._visited + math.sqrt(
-            2 * math.log2(self._parent._visited + 1) / self._visited) if self._parent != None else 0
-
-
-class MonteCarlo:
-    """Monte Carlo class with tree walk and random walk methods"""
-
-    def __init__(self, board, color):
-        self._board = board
-        self._tree = Node(None, None)
-        self._color = color
-
-    def generateChilds(self, node):
-        if self._board.is_game_over():
-            return
-
-        possible_moves = self._board.legal_moves()
-        for m in possible_moves:
-            node._childs.append(Node(node, m))
-
-    def treeWalk(self, node):
-
-        if node._childs != []:
-            cc = node.championChild()
-            self._board.push(cc._move)
-            reward = self.treeWalk(cc)
-        else:
-            self.generateChilds(node)
-            if node._childs == []:
-                self._board.push(self._board.legal_moves()[0])
-                reward = self.randomWalk()
-            else:
-                id = rd.randrange(len(node._childs))
-                child = node._childs[id]
-                self._board.push(child._move)
-                reward = self.randomWalk()
-
-        node.update(reward)
-        self._board.pop()
-        return reward
-
-    def randomWalk(self):
-        count = 0
-
-        while not self._board.is_game_over():
-            legal_moves = self._board.legal_moves()
-            idrand = rd.randrange(len(legal_moves))
-            randomMove = legal_moves[idrand]
-            self._board.push(randomMove)
-            count += 1
-
-        nbWhite, nbBlack = self._board.get_nb_pieces()
-        reward = 0
-
-        if nbWhite > nbBlack and self._color == 2:
-            reward = 1
-        if nbWhite < nbBlack and self._color == 1:
-            reward = 1
-
-        for k in range(count):
-            self._board.pop()
-
-        return reward
-
-
-
-
