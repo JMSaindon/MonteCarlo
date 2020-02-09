@@ -19,7 +19,7 @@ Encadrant : Laurent Simon
 ### commandes
 ```
 $ python localGame.py                 #permet un affrontemment entre 2 joueurs (myPlayer ou specialplayers)
-$ python localGameMultiExecution.py   #lance plusieurs duels entre 2 joueurs faire des statistiques
+$ python localGameMultiExecution.py   #lance plusieurs duels entre 2 joueurs pour faire des statistiques
 $ python plotComparison.py            #graphique des performances de plusieurs joueurs contre le randomPlayer
 ```
 
